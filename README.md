@@ -1,5 +1,10 @@
 # Grupo 2
 
+## Contacto
+
+- davalgom@bancolombia.com.co
+- d.gomez1@tcs.com
+
 ## Enlaces
 
 - [Javascript](https://developer.mozilla.org/es/docs/Web/JavaScript)
