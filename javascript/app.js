@@ -43,3 +43,10 @@ console.log(func('Hola ', 'Mundo'));
 
 console.log([1, 2, 3] + 'Hola');
 
+
+
+for (var i = 0; i < 5; i++) {
+    console.log('for', i);
+}
+
+console.log('fuera', i);

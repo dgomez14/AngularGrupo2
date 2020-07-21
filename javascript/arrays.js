@@ -1,6 +1,6 @@
 const frameworks = ['Spring'];
 frameworks.push('Angular');
-frameworks.push('Laravel', 'Django');
+frameworks.push('Laravel', 'Django', '');
 
 // console.log(frameworks.pop());
 console.log(frameworks.length);
@@ -12,6 +12,9 @@ const found = frameworks.find(elem => elem === find);
 console.log(frameworks.filter(elem => {
     return elem.includes('a');
 }));
+
+// Eliminar los falsy
+console.log(frameworks.filter(elem => !!elem));
 
 console.log(frameworks.map(el => el.concat('1')));
 
