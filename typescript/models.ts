@@ -6,6 +6,10 @@ export interface Person {
 }
 
 export class User implements Person {
-    constructor(public name: string, public username: string = 'username', public age: number = 18) {
+    constructor(
+        public name: string,
+        public username: string = 'username',
+        public age: number = 18
+    ) {
     }
 }
