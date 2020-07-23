@@ -9,7 +9,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc && browserify app.js > index.js"
+    "compile": "tsc && browserify app.js > index.js",
+    "clean": "del *.js *.js.map"
   },
   "author": "",
   "license": "ISC"
