@@ -1,1 +1,6 @@
-<h1 class="text-center font-weight-bold">todos-list works!</h1>
+<ul class="list-group col-4 mx-auto">
+  <li class="list-group-item" [id]="'todo-' + i" *ngFor="let todo of todos; let i = index">
+    {{ i }} - {{ todo.title }}
+    <button (click)="edit(todo.id)" class="btn btn-primary btn-sm">Edit</button>
+  </li>
+</ul>

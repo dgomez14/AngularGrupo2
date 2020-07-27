@@ -15,7 +15,11 @@ export class TodoService {
   }
 
   getTodos(): Observable<Todo[]> {
-    return this.http.get<Todo[]>(`${ environment.apiUrl }/tod`);
+    return this.http.get<Todo[]>(`${ environment.apiUrl }/todos`);
+  }
+
+  getTodo(id: number): Observable<Todo> {
+    return this.http.get<Todo>(`${ environment.apiUrl }/todos/${ id }`);
   }
 
 }
