@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { chunk } from 'lodash';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Todo } from '../models/todo';
@@ -12,7 +13,9 @@ import { TodoService } from '../services/todo/todo.service';
 })
 export class TodosListComponent {
 
-  todos: Todo[];
+  todos: Todo[][];
+  itemsPerPage = 10;
+  page = 1;
 
   constructor(
     private readonly todosService: TodoService,
@@ -26,7 +29,7 @@ export class TodosListComponent {
       )
       .subscribe((todos) => {
         if ( Array.isArray(todos) ) {
-          this.todos = todos;
+          this.todos = chunk(todos, this.itemsPerPage);
         } else {
           alert(todos);
         }
@@ -35,5 +38,13 @@ export class TodosListComponent {
 
   edit(id: number): void {
     this.router.navigateByUrl('/todos/edit/' + id).then().catch();
+  }
+
+  to(page: number): void {
+    if ( page < 1 || page > this.todos.length ) {
+      return;
+    }
+
+    this.page = page;
   }
 }

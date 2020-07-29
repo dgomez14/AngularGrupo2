@@ -1,7 +1,41 @@
-<p>edit-todo works!</p>
+<div class="container">
+  <form class="p-5 mt-5 border rounded col-6 mx-auto" [formGroup]="editForm" *ngIf="editForm" novalidate>
+    <h2 class="text-center">Edit Todo</h2>
 
-<a routerLink="/todos/edit/10">Todo 10</a>
+    <hr>
 
-<pre>
-  {{ todo | json }}
-</pre>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" class="form-control" id="title" name="title" formControlName="title"
+             [class.is-invalid]="editForm.get('title').invalid">
+
+      <div class="invalid-feedback">
+        {{
+          editForm.get('title').hasError('required')
+            ? 'El título no debe estar vacío'
+            : ''
+        }}
+
+        {{
+          editForm.get('title').hasError('maxlength')
+            ? 'La longitud máxima es de 10 caracteres'
+            : ''
+        }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="user">User</label>
+      <input type="text" class="form-control" id="user" name="user" disabled [value]="todo.userId">
+    </div>
+
+    <div class="form-check text-center">
+      <input type="checkbox" name="completed" id="completed" class="form-check-input" formControlName="completed">
+      <label for="completed">Completed</label>
+    </div>
+
+    <div class="row mx-0 justify-content-center mt-4">
+      <button [disabled]="editForm.invalid" (click)="edit()" class="btn btn-primary">Edit</button>
+    </div>
+  </form>
+</div>

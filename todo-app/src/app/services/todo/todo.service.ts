@@ -22,4 +22,8 @@ export class TodoService {
     return this.http.get<Todo>(`${ environment.apiUrl }/todos/${ id }`);
   }
 
+  editTodo(todo: Todo): Observable<Todo> {
+    return this.http.put<Todo>(`${ environment.apiUrl }/todos/${ todo.id }`, todo);
+  }
+
 }
