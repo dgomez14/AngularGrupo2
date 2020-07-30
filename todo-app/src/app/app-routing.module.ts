@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { TodosListComponent } from './todos-list/todos-list.component';
-import { EditTodoComponent } from './todos/edit-todo/edit-todo.component';
+import { RouterModule, Routes } from '@angular/router';
 
 
 const routes: Routes = [
@@ -12,12 +10,9 @@ const routes: Routes = [
   },
   {
     path: 'todos',
-    component: TodosListComponent
+    loadChildren: () => import('./modules/todos/todos.module').then(m => m.TodosModule)
   },
-  {
-    path: 'todos/edit/:id',
-    component: EditTodoComponent
-  }
+  { path: 'users', loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) }
 ];
 
 @NgModule({

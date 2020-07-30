@@ -11,3 +11,4 @@
 - [Typescript](https://www.typescriptlang.org/docs/home.html)
 - [CSS Selectors](https://www.w3schools.com/cssref/css_selectors.asp)
 - [Angular](https://angular.io/docs)
+- [API's públicas](https://github.com/public-apis/public-apis)

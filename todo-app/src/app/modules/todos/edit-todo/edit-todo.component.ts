@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, mergeMap, tap } from 'rxjs/operators';
-import { Todo } from '../../models/todo';
-import { TodoService } from '../../services/todo/todo.service';
+import { Todo } from '../../../models/todo';
+import { TodoService } from '../../../services/todo/todo.service';
 
 @Component({
   selector: 'app-edit-todo',
@@ -18,7 +18,8 @@ export class EditTodoComponent {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly todoService: TodoService,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly router: Router
   ) {
     this.route.paramMap
       .pipe(
@@ -50,23 +51,9 @@ export class EditTodoComponent {
       ...this.editForm.value
     };
 
-    console.log('Updated', editTodo);
-
     this.todoService.editTodo(editTodo).subscribe(todo => {
-      console.log('Response', todo);
+      this.router.navigateByUrl('todos').then();
     });
-  }
-
-  maxLength(maxValue: number): ValidatorFn {
-    return (control: FormControl): ValidationErrors | null => {
-      if ( control.value.length > maxValue ) {
-        return {
-          maxLength: control.value.length
-        };
-      }
-
-      return null;
-    };
   }
 
 }

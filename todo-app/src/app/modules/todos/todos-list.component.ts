@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { chunk } from 'lodash';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Todo } from '../models/todo';
-import { TodoService } from '../services/todo/todo.service';
+import { Todo } from '../../models/todo';
+import { TodoService } from '../../services/todo/todo.service';
 
 @Component({
   selector: 'app-todos-list',
@@ -13,9 +12,10 @@ import { TodoService } from '../services/todo/todo.service';
 })
 export class TodosListComponent {
 
-  todos: Todo[][];
+  todos: Todo[];
   itemsPerPage = 10;
   page = 1;
+  search: string;
 
   constructor(
     private readonly todosService: TodoService,
@@ -29,7 +29,7 @@ export class TodosListComponent {
       )
       .subscribe((todos) => {
         if ( Array.isArray(todos) ) {
-          this.todos = chunk(todos, this.itemsPerPage);
+          this.todos = todos;
         } else {
           alert(todos);
         }
