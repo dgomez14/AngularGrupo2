@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { TodoService } from '../../services/todo/todo.service';
   templateUrl: './todos-list.component.html',
   styleUrls: [ './todos-list.component.scss' ]
 })
-export class TodosListComponent {
+export class TodosListComponent implements OnInit {
 
   todos: Todo[];
   itemsPerPage = 10;
@@ -18,9 +18,12 @@ export class TodosListComponent {
   search: string;
 
   constructor(
-    private readonly todosService: TodoService,
+    public readonly todosService: TodoService,
     private readonly router: Router
   ) {
+  }
+
+  ngOnInit(): void {
     this.todosService.getTodos()
       .pipe(
         catchError(() => {
