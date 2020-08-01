@@ -1,5 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
-import { Todo } from '../../models/todo';
+import { Todo } from 'src/app/models/todo';
 
 // Acciones para editar un Todo
 export const editTodo = createAction(
@@ -14,7 +15,7 @@ export const editTodoSuccess = createAction(
 
 export const editTodoFailure = createAction(
   '[Todos] Edit Todo Failure',
-  props<{ message: string }>()
+  props<{ message: HttpErrorResponse }>()
 );
 
 
@@ -30,5 +31,5 @@ export const getTodosSuccess = createAction(
 
 export const getTodosFailure = createAction(
   '[Todos] Get Todos Failure',
-  props<{ message: string }>()
+  props<{ message: HttpErrorResponse }>()
 );

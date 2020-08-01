@@ -32,6 +32,8 @@ export class TodosListComponent implements OnInit {
 
         if ( todosState.todos ) {
           this.todos = todosState.todos;
+        } else if ( todosState.message ) {
+          alert(todosState.message.message);
         } else {
           this.store.dispatch(getTodos());
         }

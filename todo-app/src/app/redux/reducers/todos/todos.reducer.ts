@@ -1,12 +1,13 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { createReducer, on } from '@ngrx/store';
-import { Todo } from '../../../models/todo';
-import { getTodosFailure, getTodosSuccess } from '../../actions/todos.actions';
+import { Todo } from 'src/app/models/todo';
+import { getTodosFailure, getTodosSuccess } from 'src/app/redux/actions/todos.actions';
 
 export const todosFeatureKey = 'todosState';
 
 export interface TodosState {
   todos: Todo[] | undefined;
-  message: string | null;
+  message: HttpErrorResponse | null;
 }
 
 export const initialTodosState: TodosState = {
