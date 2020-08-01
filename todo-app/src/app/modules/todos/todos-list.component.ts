@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { Todo } from '../../models/todo';
-import { TodoService } from '../../services/todo/todo.service';
+import { getTodos } from '../../redux/actions/todos.actions';
+import { State } from '../../redux/reducers';
+import { todosFeatureKey, TodosState } from '../../redux/reducers/todos/todos.reducer';
 
 @Component({
   selector: 'app-todos-list',
@@ -18,23 +19,21 @@ export class TodosListComponent implements OnInit {
   search: string;
 
   constructor(
-    public readonly todosService: TodoService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly store: Store<State>
   ) {
   }
 
   ngOnInit(): void {
-    this.todosService.getTodos()
-      .pipe(
-        catchError(() => {
-          return of(new Error('No se pudo obtener los todos'));
-        })
-      )
-      .subscribe((todos) => {
-        if ( Array.isArray(todos) ) {
-          this.todos = todos;
+    this.store
+      .select(state => state[todosFeatureKey])
+      .subscribe((todosState: TodosState) => {
+        console.log(todosState);
+
+        if ( todosState.todos ) {
+          this.todos = todosState.todos;
         } else {
-          alert(todos);
+          this.store.dispatch(getTodos());
         }
       });
   }
