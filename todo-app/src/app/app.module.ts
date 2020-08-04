@@ -11,10 +11,12 @@ import { AppComponent } from './app.component';
 import { metaReducers, reducers } from './redux/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { TodosEffects } from './redux/effects/todos/todos.effects';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

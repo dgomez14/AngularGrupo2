@@ -4,7 +4,14 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { TodoService } from '../../../services/todo/todo.service';
-import { getTodos, getTodosFailure, getTodosSuccess } from '../../actions/todos.actions';
+import {
+  editTodo,
+  editTodoFailure,
+  editTodoSuccess,
+  getTodos,
+  getTodosFailure,
+  getTodosSuccess
+} from '../../actions/todos.actions';
 
 @Injectable()
 export class TodosEffects {
@@ -17,6 +24,17 @@ export class TodosEffects {
         catchError(message => of(getTodosFailure({ message })))
       );
     })
+  ));
+
+  editTodo$ = createEffect(() => this.actions$.pipe(
+    ofType(editTodo),
+    mergeMap(action => this.todoService
+      .editTodo(action.todo)
+      .pipe(
+        map(todo => editTodoSuccess({ todo })),
+        catchError(err => of(editTodoFailure({ message: err })))
+      )
+    )
   ));
 
   constructor(

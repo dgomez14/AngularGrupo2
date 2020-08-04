@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { select, Store } from '@ngrx/store';
+import { map, mergeMap } from 'rxjs/operators';
 import { Todo } from '../../../models/todo';
+import { editTodo, editTodoSuccess, getTodos } from '../../../redux/actions/todos.actions';
+import { State } from '../../../redux/reducers';
+import { selectTodo, todosFeatureKey } from '../../../redux/reducers/todos/todos.reducer';
 import { TodoService } from '../../../services/todo/todo.service';
 
 @Component({
@@ -19,18 +23,22 @@ export class EditTodoComponent {
     private readonly route: ActivatedRoute,
     private readonly todoService: TodoService,
     private readonly formBuilder: FormBuilder,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly store: Store<State>
   ) {
     this.route.paramMap
       .pipe(
-        map(params => params.get('id')),
-        mergeMap(id => this.todoService.getTodo(+id)),
-        tap(todo => this.todo = todo)
+        map(params => +params.get('id')),
+        mergeMap(id => this.store.pipe(select(selectTodo, { id })))
       )
-      .subscribe(todo => {
-        console.log('Todo', todo);
-        this.todo = todo;
-        this.createEditForm();
+      .subscribe((todo: Todo | undefined) => {
+        if ( todo ) {
+          this.todo = todo;
+          this.createEditForm();
+        } else {
+          this.store.dispatch(getTodos());
+          alert('Error');
+        }
       });
   }
 
@@ -46,13 +54,16 @@ export class EditTodoComponent {
       return;
     }
 
-    const editTodo: Todo = {
+    const updatedTodo: Todo = {
       ...this.todo,
       ...this.editForm.value
     };
 
-    this.todoService.editTodo(editTodo).subscribe(todo => {
-      this.router.navigateByUrl('todos').then();
+    this.store.dispatch(editTodo({ todo: updatedTodo }));
+    this.store.select(state => state[todosFeatureKey]).subscribe(store => {
+      if ( store.action === editTodoSuccess.type ) {
+        this.router.navigateByUrl('/todos').then();
+      }
     });
   }
 

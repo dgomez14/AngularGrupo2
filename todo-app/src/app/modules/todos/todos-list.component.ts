@@ -1,10 +1,17 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
+import { filter } from 'rxjs/operators';
 import { Todo } from '../../models/todo';
 import { getTodos } from '../../redux/actions/todos.actions';
 import { State } from '../../redux/reducers';
-import { todosFeatureKey, TodosState } from '../../redux/reducers/todos/todos.reducer';
+import {
+  selectTodosList,
+  selectTodosMessageError,
+  todosFeatureKey,
+  TodosState
+} from '../../redux/reducers/todos/todos.reducer';
 
 @Component({
   selector: 'app-todos-list',
@@ -20,24 +27,31 @@ export class TodosListComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly store: Store<State>
+    public readonly store: Store<State>
   ) {
   }
 
   ngOnInit(): void {
     this.store
-      .select(state => state[todosFeatureKey])
-      .subscribe((todosState: TodosState) => {
-        console.log(todosState);
+      .pipe(
+        select(selectTodosList)
+      )
+      .subscribe((todos: Todo[]) => {
+        console.log(todos);
 
-        if ( todosState.todos ) {
-          this.todos = todosState.todos;
-        } else if ( todosState.message ) {
-          alert(todosState.message.message);
+        if ( todos ) {
+          this.todos = todos;
         } else {
           this.store.dispatch(getTodos());
         }
       });
+
+    this.store
+      .pipe(
+        select(selectTodosMessageError),
+        filter(message => !!message)
+      )
+      .subscribe((message: HttpErrorResponse) => alert(message.message));
   }
 
   edit(id: number): void {

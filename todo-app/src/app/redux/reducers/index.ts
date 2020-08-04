@@ -1,20 +1,17 @@
-import {
-  Action,
-  ActionReducer,
-  ActionReducerMap,
-  createFeatureSelector,
-  createSelector,
-  MetaReducer
-} from '@ngrx/store';
+import { Action, ActionReducer, ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from 'src/environments/environment';
+import * as fromAuth from './auth/auth.reducer';
 import * as fromTodos from './todos/todos.reducer';
 
 export interface State {
   [fromTodos.todosFeatureKey]: fromTodos.TodosState;
+  [fromAuth.authFeatureKey]: fromAuth.AuthState;
+
 }
 
 export const reducers: ActionReducerMap<State> = {
-  [fromTodos.todosFeatureKey]: fromTodos.reducer
+  [fromTodos.todosFeatureKey]: fromTodos.reducer,
+  [fromAuth.authFeatureKey]: fromAuth.reducer
 };
 
 export function debug(reducer: ActionReducer<any>): ActionReducer<any> {

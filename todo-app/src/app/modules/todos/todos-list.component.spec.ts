@@ -3,10 +3,14 @@ import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, Routes } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Observable, of } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { Todo } from '../../models/todo';
 import { FilterPipe } from '../../pipes/filter/filter.pipe';
 import { PaginationPipe } from '../../pipes/pagination/pagination.pipe';
+import { getTodos } from '../../redux/actions/todos.actions';
+import { State } from '../../redux/reducers';
+import { initialTodosState, todosFeatureKey } from '../../redux/reducers/todos/todos.reducer';
 import { EditTodoComponent } from './edit-todo/edit-todo.component';
 
 import { TodosListComponent } from './todos-list.component';
@@ -14,6 +18,11 @@ import { TodosListComponent } from './todos-list.component';
 describe('TodosListComponent', () => {
   let component: TodosListComponent;
   let fixture: ComponentFixture<TodosListComponent>;
+  let store: MockStore<State>;
+
+  const initialState: State = {
+    [todosFeatureKey]: initialTodosState
+  };
 
   const routes: Routes = [
     {
@@ -38,8 +47,10 @@ describe('TodosListComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        RouterTestingModule,
-        RouterTestingModule.withRoutes(routes)
+        RouterTestingModule.withRoutes(routes),
+      ],
+      providers: [
+        provideMockStore({ initialState })
       ]
     })
       .compileComponents();
@@ -49,50 +60,76 @@ describe('TodosListComponent', () => {
     fixture = TestBed.createComponent(TodosListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    store = TestBed.get(Store);
   });
 
-  describe('Creation', () => {
-    it('should create', () => {
-      expect(component).toBeTruthy();
+  // describe('Creation', () => {
+  //   it('should create', () => {
+  //     expect(component).toBeTruthy();
+  //   });
+  //
+  //   it('should call getTodos method', () => {
+  //     spyOn(component.todosService, 'getTodos').and.returnValue(of([]));
+  //     component.ngOnInit();
+  //     expect(component.todosService.getTodos).toHaveBeenCalledTimes(1);
+  //   });
+  //
+  //   it('should set the response value to todos attribute', () => {
+  //     const todos: Todo[] = [ {
+  //       id: 1,
+  //       title: '',
+  //       completed: true,
+  //       userId: 1
+  //     } ];
+  //     spyOn(component.todosService, 'getTodos').and.returnValue(of(todos));
+  //
+  //     component.ngOnInit();
+  //
+  //     expect(component.todos).toEqual(todos);
+  //   });
+  //
+  //   it('should show an alert', () => {
+  //     spyOn(component.todosService, 'getTodos').and.returnValue(new Observable(subscriber => {
+  //       subscriber.error('No se pudo obtener los todos');
+  //     }));
+  //     spyOn(window, 'alert');
+  //     component.ngOnInit();
+  //     expect(window.alert).toHaveBeenCalled();
+  //   });
+  //
+  //   it(`should show 'No se pudo obtener los todos' when the request fails`, () => {
+  //     const errorMessage = new Error('No se pudo obtener los todos');
+  //     spyOn(component.todosService, 'getTodos').and.returnValue(new Observable(subscriber => {
+  //       subscriber.error(errorMessage);
+  //     }));
+  //     spyOn(window, 'alert');
+  //     component.ngOnInit();
+  //     expect(window.alert).toHaveBeenCalledWith(errorMessage);
+  //   });
+  // });
+
+  fdescribe('Creation', () => {
+    it('should dispatch a getTodos action', () => {
+      spyOn(component.store, 'dispatch');
+
+      component.ngOnInit();
+
+      expect(component.store.dispatch).toHaveBeenCalledWith(getTodos());
     });
 
-    it('should call getTodos method', () => {
-      spyOn(component.todosService, 'getTodos').and.returnValue(of([]));
-      component.ngOnInit();
-      expect(component.todosService.getTodos).toHaveBeenCalledTimes(1);
-    });
-
-    it('should set the response value to todos attribute', () => {
-      const todos: Todo[] = [ {
-        id: 1,
-        title: '',
-        completed: true,
-        userId: 1
-      } ];
-      spyOn(component.todosService, 'getTodos').and.returnValue(of(todos));
-
+    it('should set todos to the value in the store', () => {
       component.ngOnInit();
 
-      expect(component.todos).toEqual(todos);
-    });
+      store.setState({
+        [todosFeatureKey]: {
+          todos: [],
+          action: null,
+          message: null
+        }
+      });
 
-    it('should show an alert', () => {
-      spyOn(component.todosService, 'getTodos').and.returnValue(new Observable(subscriber => {
-        subscriber.error('No se pudo obtener los todos');
-      }));
-      spyOn(window, 'alert');
-      component.ngOnInit();
-      expect(window.alert).toHaveBeenCalled();
-    });
-
-    it(`should show 'No se pudo obtener los todos' when the request fails`, () => {
-      const errorMessage = new Error('No se pudo obtener los todos');
-      spyOn(component.todosService, 'getTodos').and.returnValue(new Observable(subscriber => {
-        subscriber.error(errorMessage);
-      }));
-      spyOn(window, 'alert');
-      component.ngOnInit();
-      expect(window.alert).toHaveBeenCalledWith(errorMessage);
+      expect(component.todos).toEqual([]);
     });
   });
 
