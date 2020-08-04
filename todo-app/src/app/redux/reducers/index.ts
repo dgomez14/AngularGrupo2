@@ -24,4 +24,4 @@ export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
 }
 
 
-export const metaReducers: MetaReducer<State>[] = !environment.production ? [ debug ] : [];
+export const metaReducers: MetaReducer<State>[] = !environment.production ? [  ] : [];

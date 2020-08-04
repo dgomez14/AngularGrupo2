@@ -1,19 +1,19 @@
+<h1 class="text-center mb-4">Todos</h1>
+
+<form>
+  <div class="form-group col-4 mx-auto px-0">
+    <label for="search">Search</label>
+    <input #searchInput class="form-control" type="text" id="search" name="search" placeholder="Search"
+           [(ngModel)]="search">
+  </div>
+</form>
+
 <div class="container" *ngIf="todos">
-  <h1 class="text-center mb-4">Todos</h1>
-
-  <form>
-    <div class="form-group col-4 mx-auto px-0">
-      <label for="search">Search</label>
-      <input class="form-control" type="text" id="search" name="search" placeholder="Search" [(ngModel)]="search">
-    </div>
-  </form>
-
   <ul class="list-group col-6 mx-auto mb-5">
-    <li class="list-group-item d-flex justify-content-between" [id]="'todo-' + i"
-        *ngFor="let todo of todos | filter:search | pagination:page - 1:itemsPerPage; let i = index">
+    <app-single-todo [index]="i" *ngFor="let todo of todos | filter:search | pagination:page - 1:itemsPerPage; let i = index">
       <span class="my-auto">{{ todo.id }} - {{ todo.title }}</span>
       <button (click)="edit(todo.id)" class="btn btn-primary btn-sm">Edit</button>
-    </li>
+    </app-single-todo>
   </ul>
 
   <nav aria-label="Page navigation example" class="d-flex justify-content-center">
@@ -23,7 +23,8 @@
         <button class="page-link" (click)="to(page - 1)">Previous</button>
       </li>
 
-      <li class="page-item" [ngClass]="{ active: i === page - 1 }" *ngFor="let todo of todos | filter:search | pagination:-1; let i = index">
+      <li class="page-item" [ngClass]="{ active: i === page - 1 }"
+          *ngFor="let todo of todos | filter:search | pagination:-1; let i = index">
         <button class="page-link" (click)="to(i + 1)">{{ i + 1 }}</button>
       </li>
 

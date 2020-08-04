@@ -1,20 +1,25 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { Todo } from 'src/app/models/todo';
-import { editTodoSuccess, getTodosFailure, getTodosSuccess } from 'src/app/redux/actions/todos.actions';
+import {
+  editTodoFailure,
+  editTodoSuccess,
+  getTodosFailure,
+  getTodosSuccess
+} from 'src/app/redux/actions/todos.actions';
 import { State } from '../index';
 
 export const todosFeatureKey = 'todosState';
 
 export interface TodosState {
   todos: Todo[] | undefined;
-  message: HttpErrorResponse | null;
+  error: HttpErrorResponse | null;
   action: string;
 }
 
 export const initialTodosState: TodosState = {
   todos: undefined,
-  message: null,
+  error: null,
   action: null
 };
 
@@ -25,13 +30,13 @@ export const reducer = createReducer(
       ...state,
       todos: action.todos,
       action: action.type,
-      message: null
+      error: null
     };
   }),
   on(getTodosFailure, (state: TodosState, action) => {
     return {
       ...state,
-      message: action.message,
+      error: action.error,
       action: action.type
     };
   }),
@@ -48,7 +53,14 @@ export const reducer = createReducer(
       ...state,
       todos,
       action: action.type,
-      message: null
+      error: null
+    };
+  }),
+  on(editTodoFailure, (state: TodosState, action) => {
+    return {
+      ...state,
+      error: action.error,
+      action: action.type
     };
   })
 );
@@ -63,7 +75,7 @@ export const selectTodosList = createSelector(
 
 export const selectTodosMessageError = createSelector(
   selectTodosState,
-  (state: TodosState): HttpErrorResponse => state.message
+  (state: TodosState): HttpErrorResponse => state.error
 );
 
 export const selectTodo = createSelector(
@@ -75,4 +87,14 @@ export const selectTodo = createSelector(
 
     return undefined;
   }
+);
+
+export const selectLastAction = createSelector(
+  selectTodosState,
+  (state: TodosState) => state.action
+);
+
+export const isLastAction = createSelector(
+  selectLastAction,
+  (action, { type }) => action === type
 );

@@ -12,7 +12,7 @@ describe('EditTodoComponent', () => {
   let component: EditTodoComponent;
   let fixture: ComponentFixture<EditTodoComponent>;
 
-  const initialState: State = {
+  const initialState: Pick<State, 'todosState'> = {
     [todosFeatureKey]: initialTodosState
   };
 

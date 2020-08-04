@@ -12,3 +12,4 @@
 - [CSS Selectors](https://www.w3schools.com/cssref/css_selectors.asp)
 - [Angular](https://angular.io/docs)
 - [API's públicas](https://github.com/public-apis/public-apis)
+- [Jasmine Marbles](https://medium.com/@bencabanes/marble-testing-observable-introduction-1f5ad39231c)

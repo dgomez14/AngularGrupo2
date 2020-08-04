@@ -15,7 +15,7 @@ export const editTodoSuccess = createAction(
 
 export const editTodoFailure = createAction(
   '[Todos] Edit Todo Failure',
-  props<{ message: HttpErrorResponse }>()
+  props<{ error: HttpErrorResponse }>()
 );
 
 
@@ -31,5 +31,5 @@ export const getTodosSuccess = createAction(
 
 export const getTodosFailure = createAction(
   '[Todos] Get Todos Failure',
-  props<{ message: HttpErrorResponse }>()
+  props<{ error: HttpErrorResponse }>()
 );

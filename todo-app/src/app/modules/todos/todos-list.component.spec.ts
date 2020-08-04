@@ -12,15 +12,16 @@ import { getTodos } from '../../redux/actions/todos.actions';
 import { State } from '../../redux/reducers';
 import { initialTodosState, todosFeatureKey } from '../../redux/reducers/todos/todos.reducer';
 import { EditTodoComponent } from './edit-todo/edit-todo.component';
+import { SingleTodoComponent } from './single-todo/single-todo.component';
 
 import { TodosListComponent } from './todos-list.component';
 
 describe('TodosListComponent', () => {
   let component: TodosListComponent;
   let fixture: ComponentFixture<TodosListComponent>;
-  let store: MockStore<State>;
+  let store: MockStore<Pick<State, 'todosState'>>;
 
-  const initialState: State = {
+  const initialState: Pick<State, 'todosState'> = {
     [todosFeatureKey]: initialTodosState
   };
 
@@ -40,6 +41,7 @@ describe('TodosListComponent', () => {
       declarations: [
         TodosListComponent,
         EditTodoComponent,
+        SingleTodoComponent,
         PaginationPipe,
         FilterPipe
       ],
@@ -109,7 +111,7 @@ describe('TodosListComponent', () => {
   //   });
   // });
 
-  fdescribe('Creation', () => {
+  describe('Creation', () => {
     it('should dispatch a getTodos action', () => {
       spyOn(component.store, 'dispatch');
 
@@ -125,7 +127,7 @@ describe('TodosListComponent', () => {
         [todosFeatureKey]: {
           todos: [],
           action: null,
-          message: null
+          error: null
         }
       });
 

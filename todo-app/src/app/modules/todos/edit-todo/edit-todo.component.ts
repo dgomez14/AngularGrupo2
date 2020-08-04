@@ -3,11 +3,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { map, mergeMap } from 'rxjs/operators';
-import { Todo } from '../../../models/todo';
-import { editTodo, editTodoSuccess, getTodos } from '../../../redux/actions/todos.actions';
-import { State } from '../../../redux/reducers';
-import { selectTodo, todosFeatureKey } from '../../../redux/reducers/todos/todos.reducer';
-import { TodoService } from '../../../services/todo/todo.service';
+import { Todo } from 'src/app/models/todo';
+import { editTodo, editTodoFailure, editTodoSuccess, getTodos } from 'src/app/redux/actions/todos.actions';
+import { State } from 'src/app/redux/reducers';
+import { selectLastAction, selectTodo } from 'src/app/redux/reducers/todos/todos.reducer';
+import { TodoService } from 'src/app/services/todo/todo.service';
 
 @Component({
   selector: 'app-edit-todo',
@@ -37,7 +37,6 @@ export class EditTodoComponent {
           this.createEditForm();
         } else {
           this.store.dispatch(getTodos());
-          alert('Error');
         }
       });
   }
@@ -54,15 +53,17 @@ export class EditTodoComponent {
       return;
     }
 
-    const updatedTodo: Todo = {
+    const todo: Todo = {
       ...this.todo,
       ...this.editForm.value
     };
 
-    this.store.dispatch(editTodo({ todo: updatedTodo }));
-    this.store.select(state => state[todosFeatureKey]).subscribe(store => {
-      if ( store.action === editTodoSuccess.type ) {
-        this.router.navigateByUrl('/todos').then();
+    this.store.dispatch(editTodo({ todo }));
+    this.store.pipe(select(selectLastAction)).subscribe(action => {
+      if ( action === editTodoSuccess.type ) {
+        this.router.navigateByUrl('todos').then();
+      } else if ( action === editTodoFailure.type ) {
+        alert('No se pudo actualizar el todo');
       }
     });
   }

@@ -1,9 +1,7 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { TodoService } from '../../../services/todo/todo.service';
 import {
   editTodo,
   editTodoFailure,
@@ -11,19 +9,20 @@ import {
   getTodos,
   getTodosFailure,
   getTodosSuccess
-} from '../../actions/todos.actions';
+} from 'src/app/redux/actions/todos.actions';
+import { TodoService } from 'src/app/services/todo/todo.service';
 
 @Injectable()
 export class TodosEffects {
 
   getTodos$ = createEffect(() => this.actions$.pipe(
     ofType(getTodos),
-    mergeMap(() => {
-      return this.todoService.getTodos().pipe(
+    mergeMap(() => this.todoService
+      .getTodos()
+      .pipe(
         map(todos => getTodosSuccess({ todos })),
-        catchError(message => of(getTodosFailure({ message })))
-      );
-    })
+        catchError(error => of(getTodosFailure({ error })))
+      ))
   ));
 
   editTodo$ = createEffect(() => this.actions$.pipe(
@@ -32,14 +31,14 @@ export class TodosEffects {
       .editTodo(action.todo)
       .pipe(
         map(todo => editTodoSuccess({ todo })),
-        catchError(err => of(editTodoFailure({ message: err })))
+        catchError(error => of(editTodoFailure({ error })))
       )
     )
   ));
 
   constructor(
     private readonly actions$: Actions,
-    private readonly todoService: TodoService
+    public readonly todoService: TodoService
   ) {
   }
 
